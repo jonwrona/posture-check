@@ -1,0 +1,22 @@
+{
+  "name": "posture-check",
+  "version": "1.0.0",
+  "description": "A Discord bot that yells at you to fix your posture.",
+  "main": "index.js",
+  "repository": "https://github.com/jonwrona/posture-check.git",
+  "author": "Jon Wrona <jonwrona@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "ffmpeg-static": "^4.2.7",
+    "ibm-watson": "^5.6.2",
+    "node-fetch": "^2.6.0",
+    "tmp": "^0.2.1",
+    "tmp-promise": "^3.0.2"
+  }
+}
