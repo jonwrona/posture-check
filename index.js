@@ -14,11 +14,13 @@ Object.values(commands).forEach(command => {
   bot.commands.set(command.name, command);
 })
 
+const commandPrefix = process.env.COMMAND_PREFIX || '!';
+
 bot.on('message', msg => {
   const args = msg.content.split(/ +/);
   let command = args.shift().toLowerCase();
 
-  if (command.charAt(0) !== '\\') return;
+  if (command.charAt(0) !== commandPrefix) return;
   command = command.substring(1);
 
   if (!bot.commands.has(command)) return;
