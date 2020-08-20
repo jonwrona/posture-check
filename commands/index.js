@@ -1,6 +1,7 @@
 module.exports = {
   Ping: require('./ping'),
-  Speak: require('./speak'),
+  // Speak: require('./speak'),
+  Remind: require('./remind'),
   Subscribe: require('./subscribe'),
   Unsubscribe: require('./unsubscribe'),
 

@@ -10,7 +10,13 @@ const setupEvent = eventFile => {
   });
 };
 
-module.exports = () => {
-  const events = fs.readdirSync(__dirname).filter(f => f !== 'index.js');
-  events.forEach(event => setupEvent(`./${event}`));
+module.exports = {
+  setupEvents: () => {
+    const events = fs.readdirSync(__dirname).filter(f => f !== 'index.js');
+    events.forEach(event => setupEvent(`./${event}`));
+  },
+  runEvent: name => {
+    const { action } = require(`./${name}`);
+    action();
+  },
 };

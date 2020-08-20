@@ -1,12 +1,9 @@
 require('dotenv').config();
 const express = require('express');
-const setupEvents = require('./events');
+const { setupEvents } = require('./events');
 const bot = require('./utils/bot');
 const Discord = require('discord.js');
-const db = require('./db');
-const Member = require('./db/models/Member');
-
-console.log(process.env.NODE_ENV);
+require('./db'); // call this to perform first time db connection
 
 
 const PORT = process.env.PORT || 5000;
