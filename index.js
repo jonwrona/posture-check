@@ -1,9 +1,15 @@
 require('dotenv').config();
-const _ = require('lodash');
+const express = require('express');
 const setupEvents = require('./events');
 const bot = require('./utils/bot');
 const Discord = require('discord.js');
 
+
+const PORT = process.env.PORT || 5000;
+const app = express();
+app.listen(PORT, () => console.log(`Started webserver on port ${PORT}`));
+
+app.get('/', (req, res) => res.send('Check yo posture!'));
 
 bot.on('ready', () => {
   console.log(`Logged in as ${bot.user.tag}!`);
