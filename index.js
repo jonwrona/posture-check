@@ -1,28 +1,29 @@
 require('dotenv').config();
+const _ = require('lodash');
+const setupEvents = require('./events');
+const bot = require('./utils/bot');
 const Discord = require('discord.js');
 
-const bot = new Discord.Client();
-bot.login(process.env.BOT_TOKEN);
 
 bot.on('ready', () => {
   console.log(`Logged in as ${bot.user.tag}!`);
+  setupEvents();
 });
 
 bot.commands = new Discord.Collection();
 const commands = require('./commands');
 Object.values(commands).forEach(command => {
   bot.commands.set(command.name, command);
-})
+});
 
-const commandPrefix = process.env.COMMAND_PREFIX || '!';
+const commandPrefix = process.env.COMMAND_PREFIX || '!posture';
 
 bot.on('message', msg => {
   const args = msg.content.split(/ +/);
-  let command = args.shift().toLowerCase();
+  const prefix = args.shift().toLowerCase();
+  if (prefix !== commandPrefix) return;
 
-  if (command.charAt(0) !== commandPrefix) return;
-  command = command.substring(1);
-
+  const command = args.shift().toLowerCase();
   if (!bot.commands.has(command)) return;
 
   try {

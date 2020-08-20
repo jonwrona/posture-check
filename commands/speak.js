@@ -1,29 +1,24 @@
 const tts = require('../utils/textToSpeech');
 const fs = require('fs');
 const path = require('path')
+const ArgumentParser = require('argparse');
+const { playAudio } = require('../utils/discord');
+
+const reminders = require('../data/reminders');
+const randomReminder = () => reminders[Math.floor(Math.random() * reminders.length)];
 
 module.exports = {
   name: 'speak',
   description: 'Speak in the callers channel!',
   async execute(msg, args) {
-    const text = args.join(' ');
 
     if (!msg.guild) return;
-    if (msg.member.voice.channel) {
-      await tts(text);
-      try {
-        const connection = await msg.member.voice.channel.join();
-        const audioStream = fs.createReadStream(path.join(__dirname, '../OUTPUT.ogg'));
-        const dispatcher = connection.play(audioStream, {
-          type: 'ogg/opus',
-        });
-        dispatcher.on('finish', () => {
-          console.log('Finished playing!');
-          msg.member.voice.channel.leave();
-        });
-      } catch (error) {
-        console.log(error);
-      }
+    const channel = msg.member.voice.channel;
+    if (channel) {
+      const reminder = randomReminder();
+      const result = await tts(reminder);
+      const audioStream = fs.createReadStream(path.join(__dirname, '../OUTPUT.ogg'));
+      playAudio(channel, audioStream);
     } else {
       msg.reply('You need to join a voice channel first!');
     }
