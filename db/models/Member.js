@@ -13,6 +13,15 @@ const Member = db.define('Member', {
     allowNull: false,
     defaultValue: false,
   },
+  thanks: {
+    type: DataTypes.NUMBER,
+    defaultValue: 0,
+    allowNull: false,
+  },
+  thankedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {});
 
 Member.sync({ force: process.env.NODE_ENV !== 'production' });

@@ -3,5 +3,5 @@ module.exports = {
   description: 'Ping!',
   execute(msg, args) {
     msg.reply('pong');
-  }
-}
+  },
+};

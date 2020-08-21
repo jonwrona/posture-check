@@ -10,6 +10,7 @@ const getUsersList = bot => {
   const memberList = [];
   for (const [ channelId, channel ] of channels) {
     if (channel.type !== 'voice') continue;
+    const guildId = channel.guild.id;
     // console.log(`${channel.name}::${channel.guild.name}`);
     const members = channel.members;
     for (const [ memberId, member ] of members) {
@@ -17,25 +18,50 @@ const getUsersList = bot => {
       memberList.push({
         member: memberId,
         channel: channelId,
+        guild: guildId,
       });
     }
   }
   return memberList;
 };
 
-const playAudio = async (channel, audioStream) => {
-  if (!channel) return;
+const playAudio = async (bot, channels, audioStream) => {
+
+  // organize the channels into guilds
+  const guildMap = {};
+  let length = 0;
+  channels.forEach(channel => {
+    const guildId = channel.guild.id;
+    if (!!guildMap[guildId]) {
+      guildMap[guildId].push(channel);
+    } else {
+      guildMap[guildId] = [ channel ];
+    }
+    length = Math.max(guildMap[guildId], length);
+  });
+
+  const guildArray = Object.values(guildMap);
+  for (let i = 0; i < length; i++) {
+    const channels = guildArray.map(guild => guild[i] || null).filter(el => el != null);
+    console.log(channels);
+  }
+
   try {
-    const connection = await channel.join();
-    const dispatcher = connection.play(audioStream, {
-      type: 'ogg/opus',
-    });
-    dispatcher.on('finish', () => {
+    const broadcast = bot.voice.createBroadcast();
+    for (const channel of channels) {
+      const connection = await channel.join();
+      connection.play(broadcast);
+    }
+    const broadcastDispatcher = broadcast.play(audioStream, { type: 'ogg/opus' });
+    const leaveChannels = () => channels.forEach(channel => channel.leave());
+    broadcastDispatcher.on('finish', () => {
       console.log('Finished playing!');
-      channel.leave();
+      broadcast.end();
+      leaveChannels();
     });
-    dispatcher.on('error', error => {
-      channel.leave();
+    broadcastDispatcher.on('error', error => {
+      broadcast.end();
+      leaveChannels();
       throw(error);
     });
   } catch (error) {

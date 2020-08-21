@@ -19,8 +19,10 @@ module.exports = {
     if (!member.subscribed) {
       member.subscribed = true;
       member.save();
+      console.log(`Member with id ${memberId} subscription activated`);
+    } else {
+      console.log(`Member with id ${memberId} is already subscribed`);
     }
-
-    console.log(`Member with id ${memberId} was subscribed to posture bot.`);
+    msg.react('😄');
   }
 }

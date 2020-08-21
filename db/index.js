@@ -10,4 +10,5 @@ const db = new Sequelize(process.env.DATABASE_URL || 'sqlite::memory:');
   }
 })();
 
+
 module.exports = db;

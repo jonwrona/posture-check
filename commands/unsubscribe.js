@@ -19,8 +19,10 @@ module.exports = {
     if (!!member.subscribed) {
       member.subscribed = false;
       member.save();
+      console.log(`Member with id ${memberId} subscription removed`);
+    } else {
+      console.log(`Member with id ${memberId} is not subscribed`);
     }
-
-    console.log(`Member with id ${memberId} was unsubscribed to posture bot.`);
+    msg.react('😦');
   }
 }
